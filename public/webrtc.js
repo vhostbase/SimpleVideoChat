@@ -7,7 +7,7 @@ window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecogn
   || window.msSpeechRecognition || window.oSpeechRecognition;
 
 var config = {
-	wssHost: 'wss://10.91.32.48:8443'
+	wssHost: 'wss://vchat-simplevideochat.apps.us-east-1.starter.openshift-online.com:8080'
   //wssHost: 'wss://wotpal.club'
   // wssHost: 'wss://example.com/myWebSocket'
 };
