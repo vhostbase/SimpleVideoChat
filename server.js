@@ -33,11 +33,17 @@ wss.on('connection', function (client, incoming_request) {
 	console.log(client.upgradeReq.url.replace('\?', ''));
 	const urlParams = new URLSearchParams(client.upgradeReq.url.replace('/?', ''));
 	const myParam = urlParams.get('yuid');
+	var oldClientId = clientSet[myParam];	
 	clientSet[myParam]=clientId;
   console.log("A new WebSocket client was connected."+clientId);
   /** incomming message */
   client.on('message', function (message) {
 	  var msgData = JSON.parse(message);
+/*	  if(msgData.closeConnection){
+		if (client.readyState === client.OPEN) {
+			  client.close();
+		 }
+	  }*/
 	  var id = msgData.yuid;
 	  var tgtClientId = clientSet[id];
     /** broadcast message to all clients */
@@ -53,12 +59,18 @@ wss.broadcast = function (data, exclude, tgtClientId) {
 	client = this.clients[i];
 	console.log("client id "+client._ultron.id);
 	console.log("target id "+tgtClientId);
-	// don't send the message to the sender...
-	if (client._ultron.id === exclude._ultron.id) continue;
-	if(tgtClientId === client._ultron.id){
-		console.log('Found Client...');
+	if(data.indexOf('closeConnection') > -1){
+		console.log("colse target id "+client._ultron.id);
 		if (client.readyState === client.OPEN) client.send(data);
-		else console.error('Error: the client state is ' + client.readyState);
+			else console.error('Error: the client state is ' + client.readyState);
+	}else{
+		// don't send the message to the sender...
+		if (client._ultron.id === exclude._ultron.id) continue;
+		if(tgtClientId === client._ultron.id){
+			console.log('Found Client...');
+			if (client.readyState === client.OPEN) client.send(data);
+			else console.error('Error: the client state is ' + client.readyState);
+		}
 	}
   }
 };
