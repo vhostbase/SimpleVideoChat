@@ -60,6 +60,7 @@ wss.broadcast = function (data, exclude, target) {
 	// don't send the message to the sender...
 	if (client === exclude) continue;
 	if(target === client){
+		console.log('Found Client...');
 		if (client.readyState === client.OPEN) client.send(data);
 		else console.error('Error: the client state is ' + client.readyState);
 	}
