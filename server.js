@@ -58,8 +58,8 @@ wss.broadcast = function (data, exclude, target) {
   for (; i < n; i++) {
 	client = this.clients[i];
 	// don't send the message to the sender...
-	if (client === exclude) continue;
-	if(target === client){
+	if (client._ultron.id === exclude._ultron.id) continue;
+	if(target._ultron.id === client._ultron.id){
 		console.log('Found Client...');
 		if (client.readyState === client.OPEN) client.send(data);
 		else console.error('Error: the client state is ' + client.readyState);
