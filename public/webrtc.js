@@ -40,7 +40,7 @@ function pageReady() {
     videoCallButton.removeAttribute("disabled");
     videoCallButton.addEventListener("click", initiateCall);
     endCallButton.addEventListener("click", function (evt) {
-      wsc.send(JSON.stringify({"closeConnection": true }));
+		wsc.send(JSON.stringify({"closeConnection": true }));
     });
   } else {
     alert("Sorry, your browser does not support WebRTC!")
