@@ -57,6 +57,8 @@ wss.broadcast = function (data, exclude, target) {
   console.log("Broadcasting message to all " + n + " WebSocket clients.");
   for (; i < n; i++) {
 	client = this.clients[i];
+	console.log("client id "+client._ultron.id);
+	console.log("target id "+target._ultron.id);
 	// don't send the message to the sender...
 	if (client._ultron.id === exclude._ultron.id) continue;
 	if(target._ultron.id === client._ultron.id){
