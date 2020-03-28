@@ -59,8 +59,9 @@ wss.broadcast = function (data, exclude, target) {
 	client = this.clients[i];
 	// don't send the message to the sender...
 	if (client === exclude) continue;
-	if(target !== client)continue;
-	if (client.readyState === client.OPEN) client.send(data);
-	else console.error('Error: the client state is ' + client.readyState);
+	if(target === client){
+		if (client.readyState === client.OPEN) client.send(data);
+		else console.error('Error: the client state is ' + client.readyState);
+	}
   }
 };
