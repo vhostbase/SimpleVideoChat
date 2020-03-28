@@ -6,23 +6,30 @@ window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSess
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition 
   || window.msSpeechRecognition || window.oSpeechRecognition;
 
+var urlParams = new URLSearchParams(window.location.search);
+var fromYuid = urlParams.get('fromYuid');
+var yuid = urlParams.get('toYuid');
+console.log(yuid);
 var config = {
-	wssHost: 'wss://vchat-simplevideochat.apps.us-east-1.starter.openshift-online.com'
+	wssHost: 'wss://localhost:8080?yuid='+fromYuid
+	//wssHost: 'wss://vchat-simplevideochat.apps.us-east-1.starter.openshift-online.com?yuid='+fromYuid
   //wssHost: 'wss://wotpal.club'
   // wssHost: 'wss://example.com/myWebSocket'
 };
+
 var localVideoElem = null, 
   remoteVideoElem = null, 
   localVideoStream = null,
   videoCallButton = null, 
   endCallButton = null;
-var peerConn = null,
+	var peerConn = null,
+	
   wsc = new WebSocket(config.wssHost),
   peerConnCfg = {'iceServers': 
     [{'url': 'stun:stun.services.mozilla.com'}, 
      {'url': 'stun:stun.l.google.com:19302'}]
   };
-    
+  
 function pageReady() {
   // check browser WebRTC availability 
   if(navigator.getUserMedia) {
@@ -51,6 +58,7 @@ function prepareCall() {
 // run start(true) to initiate a call
 function initiateCall() {
   prepareCall();
+  //wsc.send(JSON.stringify({"opr": "register", "yiud": yuid }));
   // get the local stream, show it in the local video element and send it
   navigator.getUserMedia({ "audio": true, "video": true }, function (stream) {
     localVideoStream = stream;
@@ -94,7 +102,7 @@ function createAndSendOffer() {
       var off = new RTCSessionDescription(offer);
       peerConn.setLocalDescription(new RTCSessionDescription(off), 
         function() {
-          wsc.send(JSON.stringify({"sdp": off }));
+          wsc.send(JSON.stringify({"sdp": off , "yuid": yuid}));
         }, 
         function(error) { console.log(error);}
       );
@@ -119,7 +127,7 @@ function createAndSendAnswer() {
 
 function onIceCandidateHandler(evt) {
   if (!evt || !evt.candidate) return;
-  wsc.send(JSON.stringify({"candidate": evt.candidate }));
+  wsc.send(JSON.stringify({"candidate": evt.candidate, "yuid": yuid}));
 };
 
 function onAddStreamHandler(evt) {
