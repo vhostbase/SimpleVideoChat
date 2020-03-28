@@ -116,7 +116,7 @@ function createAndSendAnswer() {
     function (answer) {
       var ans = new RTCSessionDescription(answer);
       peerConn.setLocalDescription(ans, function() {
-          wsc.send(JSON.stringify({"sdp": ans }));
+          wsc.send(JSON.stringify({"sdp": ans, "yuid": yuid }));
         }, 
         function (error) { console.log(error);}
       );
